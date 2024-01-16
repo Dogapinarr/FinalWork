@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>İzmir Araç Kiralama Arama</title>
+
+  <div  class="sticky-bar">
+    <div class="logo">
+      <img src="https://www.avis.com.tr/assets/img/avis-logo.svg" alt="Logo">
+    </div>
+    <div class="navigation">
+      <a href="{{ url_for('login') }}">Üye Girişi</a>
+     
+    </div>
+  </div>
+
+  <div style="text-align: left; font-size: 14px;" class="item-content"><div class="item-text"><span>12 Mart - 09:30 ></span> <i class="icon icon-arrow-right"></i> <span>15 Mart - 09:30</span></div> <span>İzmir - İZMİR ALSANCAK ŞEHİR</span> </div>
+
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; 
+        }
+
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            background-color: #d4002a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100px;
+            padding: 0 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000; 
+        }
+
+        .logo img {
+            width: 110px;
+            height: 33px;
+        }
+
+        .navigation {
+            display: flex;
+            align-items: center;
+        }
+
+        .navigation a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            margin-right: 30px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly; 
+            align-items: flex-start;
+            margin-top: 20px;
+            padding: 0 20px; 
+        }
+
+        .product {
+            border: 1px solid #000000;
+            margin-bottom: 30px;
+            width: 100%; 
+            max-width: 250px; 
+            border-radius: 5px;
+            padding: 10px;
+            margin: 0 10px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            max-width: 180px; 
+            max-height: 125px; 
+        }
+
+        .button-red {
+    background-color: #FF0134;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 30px;
+    border: 0;
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-left: auto; 
+    display: block; 
+}
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column; 
+            }
+
+            .product {
+                width: 100%; 
+            }
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<div style="width: 900px; justify-content: space-evenly;" class="container">
+    <!-- Seçim araçları burada olabilir -->
+    <label for="carType">Araç Tipi:</label>
+    <select id="carType" onchange="filterByCarType()">
+        <option value="all">Tümü</option>
+        <option value="EKONOMİK">Ekonomik</option>
+        <option value="KONFOR">Konfor</option>
+        <option value="PRESTİJ">Prestij</option>
+    </select>
+
+    <label for="priceOrder">Fiyata Göre:</label>
+    <select id="priceOrder" onchange="sortBy('priceOrder')">
+        <option value="asc">En Düşük Fiyat</option>
+        <option value="desc">En Yüksek Fiyat</option>
+    </select>
+
+    <label for="transmission">Şanzıman Tipi:</label>
+    <select id="transmission" onchange="filterByTransmission()">
+        <option value="all">Tümü</option>
+        <option value="Otomatik">Otomatik</option>
+        <option value="Manuel">Manuel</option>
+    </select>
+</div>
+
+<div class="products" style="background-color: rgb(255, 255, 255); margin: 30px; border-radius: 6px;">
+    <div style="margin-left: 20px; justify-content: space-around;" class="container" id="productsContainer">
+        <!-- Ürünler burada dinamik olarak gösterilecek -->
+        {% for product in products %}
+        <div data-car-type="{{ product[1] }}" data-transmission="{{ product[3] }}" data-price="{{ product[8] }}" style="margin-left: 10px; height: 450px; width: 250px; margin-top: 10px; background-color: rgb(255, 255, 255);" class="product">
+            <h3 style="font-family: source_sans_proregular,sans-serif; font-size: 14px; font-weight: 700; margin-right: 4px; color:#d4002a;">{{ product[1] }}</h3>
+            <h3 style="font-family: source_sans_proregular,sans-serif; font-size: 16px; font-weight: 700; margin-right: 4px;">{{ product[2] }}</h3>
+            <a href="/product/{{ product[0] }}"><img src="{{ product[4] }}" class="Image" alt="Product Image" style="object-fit: contain; margin: 15px auto 5px auto; display: flex; border-radius: 0px;"></a>
+            <p style="position: relative; line-height: normal; font-size: 14px; margin: 2px 0;">{{ product[3] }}</p>
+            <p style="position: relative; line-height: normal; font-size: 14px; margin: 2px 0;">{{ product[5] }} TL Depozito </p>
+            <p style="position: relative; line-height: normal; font-size: 14px; margin: 2px 0;">{{ product[6] }} Km</p>
+            <p style="position: relative; line-height: normal; font-size: 14px; margin: 2px 0;">{{ product[7] }}</p>
+            <p style="color:#d4002a; font-weight: 600px; font-size: 16px; font-family: source_sans_proregular,sans-serif !important; width: 200px;">   {{ product[8] * rentalDays }} TL</p>     
+            <button  type="submit" class="button-red">
+                <span style="cursor: pointer;" onclick="calculateRentalDays()" >Hemen Öde</span>
+                <i class="icon icon-arrow-right"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    displayAllData();
+
+    function displayAllData() {
+        $('#productsContainer .product').show();
+    }
+
+    function filterByCarType() {
+        var selectedCarType = $('#carType').val();
+
+        if (selectedCarType === 'all') {
+            displayAllData();
+        } else {
+            $('#productsContainer .product').hide();
+            $('#productsContainer .product[data-car-type="' + selectedCarType + '"]').show();
+        }
+    }
+    
+    function filterByTransmission() {
+        var selectedTransmission = $('#transmission').val();
+
+        if (selectedTransmission === 'all') {
+            displayAllData();
+        } else {
+            $('#productsContainer .product').hide();
+            $('#productsContainer .product[data-transmission="' + selectedTransmission + '"]').show();
+        }
+    }
+
+    function sortBy(key) {
+        var sortOrder = $('#priceOrder').val();
+
+        if (key === 'priceOrder') {
+            var sortedData = $('#productsContainer .product').toArray().sort(function(a, b) {
+                var aPrice = parseFloat($(a).data('price'));
+                var bPrice = parseFloat($(b).data('price'));
+
+                return sortOrder === 'asc' ? aPrice - bPrice : bPrice - aPrice;
+            });
+
+            $('#productsContainer').html(sortedData);
+        }
+    }
+
+    function calculateRentalDays() {
+    var pickupDate = new Date(document.getElementById("alma-tarihi").value);
+    var returnDate = new Date(document.getElementById("iade-tarihi").value);
+    var timeDiff = returnDate - pickupDate;
+    var rentalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    if (rentalDays >= 0) {
+        document.getElementById("rental-duration").innerHTML = rentalDays + " GÜN KİRALA";
+
+        var totalPrice = productPrice * rentalDays;
+        document.getElementById("total-price-input").value = totalPrice.toFixed(2);
+
+        return true; 
+    } else {
+        alert("İade tarihi alış tarihinden sonra olmalıdır.");
+        return false; 
+    }
+    }
+
+      var urlParams = new URLSearchParams(window.location.search);
+        var rentalDays = urlParams.get('rentalDays');
+
+        console.log("Rental Days in search.html:", rentalDays);
+
+</script>
+
+  <style>body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
+}
+    .sticky-bar {
+      position: sticky;
+      top: 0;
+      background-color: #d4002a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100px;
+      padding: 0 20px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000; 
+    }
+
+    .logo img {
+    width: 110px;
+    height: 33px;
+}
+.navigation {
+      display: flex;
+      align-items: center;
+    }
+
+    .navigation a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+      margin-right: 30px;
+    }
+
+    .container {
+     display: flex;
+     flex-wrap: wrap;
+     align-items: flex-start;
+     margin-top: 20px;
+ }
+ 
+ .product {
+     border: 1px solid #000000;
+     margin-bottom: 30px;
+     width: 150px;
+     border-radius: 5px;
+     padding: 10px;
+     margin-left: 10px; 
+ 
+     flex: 0 0 calc(25% - 20px); 
+     max-width: calc(25% - 20px); 
+     box-sizing: border-box; 
+ }
+ 
+ 
+ .product img {
+     width: 250px;
+     height: 125px;
+     border-radius: 5px;
+ }
+
+ .button-red {
+ 
+    background-color: #FF0134;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 30px;
+    border: 0;
+   
+}
+
+@media screen and (max-width: 768px) {
+  
+    .container {
+        width: 90%;
+    }
+}
+</style>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label,
+        input,
+        select,
+        button {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Kayıt Ol</h1>
+    <form id="registerForm" action="/register" method="POST">
+        <label for="ad">Ad:</label>
+        <input type="text" id="ad" name="ad" required>
+        <br>
+        <label for="soyad">Soyad:</label>
+        <input type="text" id="soyad" name="soyad" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="username">Kullanıcı Adı:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Şifre:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <label for="confirmPassword">Şifreyi Onayla:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        <br>
+        <label for="country">Ülke:</label>
+        <select id="country" name="country" onchange="updateCities()" required>
+            <option value="Türkiye">Türkiye</option>
+            <option value="Amerika">Amerika</option>
+            <option value="İtalya">İtalya</option>
+        </select>
+        <br>
+        <label for="city">Şehir:</label>
+        <select id="city" name="city" onchange="updateMapWithCoordinates()" required>
+        </select>
+                <br>
+        <button action="/register" method="POST" type="submit">Kayıt Ol</button>    
+    </form>
+   
+    <script>
+        var cities = {
+            'Türkiye': ['Ankara', 'İstanbul', 'İzmir'],
+            'Amerika': ['New York', 'Los Angeles', 'Chicago'],
+            'İtalya': ['Roma', 'Milano', 'Napoli']
+        };
+    
+        function updateCities() {
+            var countrySelect = document.getElementById('country');
+            var citySelect = document.getElementById('city');
+            var selectedCountry = countrySelect.value;
+    
+            // Şehir seçimini güncelle
+            citySelect.innerHTML = '';
+            for (var i = 0; i < cities[selectedCountry].length; i++) {
+                var option = document.createElement('option');
+                option.value = cities[selectedCountry][i];
+                option.text = cities[selectedCountry][i];
+                citySelect.appendChild(option);
+            }
+        }
+    
+        window.onload = function() {
+            updateCities(); 
+        };
+   
+        function updateMap() {
+    var citySelect = document.getElementById('city');
+    var selectedCity = citySelect.value;
+
+    var countrySelect = document.getElementById('country');
+    var selectedCountry = countrySelect.value;
+
+    localStorage.setItem('selectedCity', selectedCity);
+    localStorage.setItem('selectedCountry', selectedCountry);
+
+    }
+
+    function updateMapWithCoordinates(latitude, longitude) {
+    }
+
+
+        function validatePassword() {
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+            var errorDiv = document.getElementById('error');
+
+            if (password !== confirmPassword) {
+                errorDiv.innerHTML = 'Şifreler eşleşmiyor.';
+                return false;
+            }
+
+            var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/;
+            if (!regex.test(password)) {
+                errorDiv.innerHTML = 'Şifre en az 8 karakter, 1 rakam ve 1 özel karakter içermelidir.';
+                return false;
+            }
+
+            errorDiv.innerHTML = '';
+            return true;
+        }
+
+      
+    var map = L.map('map').setView([0, 0], 2); 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+</script>
+
+<script>
+ 
+
+    function updateMap(city) {
+        map.eachLayer(function (layer) {
+            layer.remove();
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker([0, 0]).addTo(map) 
+            .bindPopup('City: ' + city)
+            .openPopup();
+    }
+
+    </script>
+    <script>
+        var cities = {
+            'Türkiye': ['Ankara', 'İstanbul', 'İzmir'],
+            'Amerika': ['New York', 'Los Angeles', 'Chicago'],
+            'İtalya': ['Roma', 'Milano', 'Napoli']
+        };
+    
+        function updateCities() {
+            var countrySelect = document.getElementById('country');
+            var citySelect = document.getElementById('city');
+            var selectedCountry = countrySelect.value;
+    
+            citySelect.innerHTML = '';
+            for (var i = 0; i < cities[selectedCountry].length; i++) {
+                var option = document.createElement('option');
+                option.value = cities[selectedCountry][i];
+                option.text = cities[selectedCountry][i];
+                citySelect.appendChild(option);
+            }
+        }
+    
+        function updateMap() {
+            var citySelect = document.getElementById('city');
+            var selectedCity = citySelect.value;
+    
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/update_map?city=' + selectedCity, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+    
+                    updateMapWithCoordinates(response.latitude, response.longitude, selectedCity);
+                }
+            };
+            xhr.send();
+        }
+    
+        function updateMapWithCoordinates(latitude, longitude, selectedCity) {
+            var map = L.map('map').setView([latitude, longitude], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            L.marker([latitude, longitude]).addTo(map).bindPopup('City: ' + selectedCity).openPopup();
+        }
+    
+        function updateCities() {
+    var countrySelect = document.getElementById('country');
+    var citySelect = document.getElementById('city');
+    var selectedCountry = countrySelect.value;
+
+    citySelect.innerHTML = '';
+    for (var i = 0; i < cities[selectedCountry].length; i++) {
+        var option = document.createElement('option');
+        option.value = cities[selectedCountry][i];
+        option.text = cities[selectedCountry][i];
+        citySelect.appendChild(option);
+    }
+
+    var selectedCity = citySelect.value;
+    localStorage.setItem('selectedCity', selectedCity);
+}
+
+window.onload = function() {
+    var storedCity = localStorage.getItem('selectedCity');
+    if (storedCity) {
+        var countrySelect = document.getElementById('country');
+        countrySelect.value = storedCity;
+
+        updateCities();
+    }
+};
+
+    </script>
+</body>
+</html>

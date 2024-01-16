@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
+}
+  
+    .sticky-bar {
+      position: sticky;
+      top: 0;
+      background-color: #d4002a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100px;
+      padding: 0 20px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000; 
+    }
+
+    .logo img {
+    width: 110px;
+    height: 33px;
+}
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-bar input[type="text"] {
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .search-bar button {
+      background-color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .search-bar button:hover {
+      background-color: #ddd;
+    }
+
+    .navigation {
+      display: flex;
+      align-items: center;
+    }
+
+    .navigation a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+      margin-right: 30px;
+    }
+
+    .form-label{
+      position: relative;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 1.33;
+    color: rgba(255,255,255,.8);
+    padding: 0 15px;
+    width: 28px;
+    }
+
+    .navigation a:hover {
+      text-decoration: underline;
+    }
+
+    .form-container {
+      background-color: #222;
+     
+      height: 206px;}
+      
+      .rent-card .select-rent-type .item.selected {
+    background-color: #646260;
+    color: #fff;
+    cursor: default;}
+
+.rent-card .select-rent-type .item {
+    padding: 15px 24px;
+
+    #alma-tarihi {
+      width: 90px;
+      height: 48px;
+      color: white; 
+      background-color: black;
+      border: none; 
+      outline: none; 
+      padding: 10px; 
+      font-size: 16px; 
+    }
+}
+.button-red {
+  display: flex;
+    align-items: center;
+    padding: 17px 30px;
+    background-color: #FF0134;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-left: 800px;
+    color: #fff;
+    border-radius: 30px;
+    border: 0;
+    transition: ease all .3s;
+    position: absolute;
+}
+
+@media only screen and (max-width: 468px) {
+          
+            .form-group {
+                flex-direction: column;
+            }
+
+            .button-red {
+                padding: 10px 20px;
+                margin-left: 1600px;
+            }
+        }
+
+@media only screen and (max-width: 768px) {
+    .button-red {
+        position: static; 
+        width: 100%;
+        margin-top: 10px; 
+        margin-left: 1300px;
+    }
+}
+        @media only screen and (min-width: 769px) and (max-width: 1200px) {
+            .form-group {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            #map {
+                width: 48%;
+            }
+        }
+
+  </style>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+    <body>
+    
+      <div class="sticky-bar">
+        <div class="logo">
+            <img src="https://www.avis.com.tr/assets/img/avis-logo.svg" alt="Logo">
+        </div>
+        <div class="navigation">
+            <div style="margin-right: 5px; color: #fff ;font-weight: bold;" class="a" id="usernameDisplay">Hoşgeldin,<span id="welcomeUsername"></span>!</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Ara...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+    </body>
+   
+    <div class="form-container">
+      <div style="height: 54px;  " class="rent-type-wrapper"><div class="container">
+        <div class="select-rent-type"><label style="margin: 25px;" class="item selected">
+          <input type="radio" name="rentType" value="Avis" class="d-none">
+           <span class="check-icon"></span> 
+           <span style="color: white;" >Araç Kirala</span></label> </div> </div> </div>
+     <form class="form" style="padding: 16px 0;
+     background-color: #65615D;
+     display: flex;
+     height: 60px;">
+  <div class="form-group">
+    <label class="form-label" for="teslim-ofisi">Teslim Alma Ofisi</label></div>
+    <select style="padding: 5px 55px 5px 25px;
+    height: 45px;" class="form-control" id="teslim-ofisi">
+      <option value="PT">Alsancak</option>
+    </select>
+  
+  <div class="form-group">
+    <label class="form-label" for="alma-tarihi">Alış Tarihi</label>
+    <input type="text" class="custom-datepicker" id="alma-tarihi" value="2023-12-18" onchange="calculateRentalDays">
+  </div>
+  <div class="form-group">
+  <input type="text" class="custom-timepicker" value="12:00">
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="iade-ofisi">İade Ofisi</label>
+    <select style="padding: 5px 55px 5px 25px;
+    height: 45px;" class="form-control" id="iade-ofisi">
+      <option value="PT">Alsancak</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="iade-tarihi">İade Tarihi</label>
+    <input type="text" class="custom-datepicker" id="iade-tarihi" value="2023-12-20" onchange="calculateRentalDays">
+  </div>
+  <div class="form-group">
+    <input type="text" class="custom-timepicker" value="12:00">
+  </div>
+</form>
+
+<form action="{{ url_for('search') }}" onsubmit="return calculateRentalDays()">
+
+  <div class="item item-btn d-exxl-none">
+    <button type="submit" class="button-red">
+      <span style="cursor: pointer;" id="rental-duration">2 GÜN KİRALA</span>
+      <i class="icon icon-arrow-right"></i>
+    </button>
+  </div>
+</form>
+  </div>
+    <div style="display: flex;margin-left: 35px;" class="containerMap"><div style="width: 450px; height: 270px; margin-right: 50px;" class="row"><div class="col-xxl-8 col-xl-10 col-lg-12 col-24" style="width: 250px;"><div class="form-content"><h2 class="title">Avis ofisi </h2> <div></div> <div class="scrollable-content" ><div data-toggle="scrollableContent" class="office-list"><div><div class="office-info-card secondary"><span  class="number" style="color: #d4002a; font-weight:bolder" >1</span> <div class="card-content"><div class="card-header"><h3 style="color: #d4002a;" class="title">İZMİR ALSANCAK ŞEHİR <i class="icon icon-city-secondary"></i></h3> <!----></div> <p class="desc">İsmet Kaptan Mh, Gaziosmanpaşa Bulvarı N:7 Hilton İzmir 2.blok Z03 , 35210 Konak/İzmir</p> <p class="desc">
+      Telefon
+      <span>0232 441 44 17- 0232 441 44 18</span></p> <div class="working-hours"><div class="item mb-2"><!----> <div class="d-flex flex-column"><b>Pazartesi - Pazar</b> <span>09:00 - 19:00</span></div></div></div> <div class="btn-list"><a href="https://maps.google.com/?daddr=38.425732,27.136969" target="_blank" rel="noopener" style="margin-left: 210px; padding: 10px; font-size:12px"class="button-red"><span>YOL TARİFİ</span> <i class="icon icon-arrow-right"></i></a></div></div></div></div></div></div></div></div></div>
+      <div>
+        <style>
+          #map {
+              height: 450px;
+              width: 600px;
+              border: 0;
+          }
+      </style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+<div id="map" style="height: 400px;"></div>
+<script>
+  var map = L.map('map').setView([0, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var city = "{{ session['city'] }}";
+
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        L.marker([51.505, -0.09]).addTo(map).bindPopup('City: ' + city).openPopup();
+    });
+</script>
+
+</div>
+</div>
+
+</body>
+<script>
+
+
+
+</script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+<style>
+  .custom-datepicker  {
+    width: 90px;
+    height: 48px;
+    color: white; 
+    background-color: black; 
+    border: none; 
+    outline: none; 
+    font-size: 16px; 
+    margin-right: 5px;
+  }
+  .custom-timepicker {
+    width: 90px;
+    height: 48px;
+    color: white; 
+    background-color: black; 
+    border: none; 
+    outline: none;
+    font-size: 16px; 
+  }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+  $(function() {
+    $(".custom-datepicker").datepicker();
+    $('.custom-timepicker').timepicker({
+      showMeridian: false,
+      minuteStep: 30,
+      defaultTime: false
+    });
+  });
+</script>
+<script>
+   function calculateRentalDays() {
+            var pickupDate = new Date(document.getElementById("alma-tarihi").value);
+            var returnDate = new Date(document.getElementById("iade-tarihi").value);
+            var timeDiff = returnDate - pickupDate;
+            var rentalDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+            if (rentalDays >= 0) {
+                document.getElementById("rental-duration").innerHTML = rentalDays + " GÜN KİRALA";
+
+                console.log("Rental Days from Flask:", rentalDays);
+
+                window.location.href = '/search?rentalDays=' + rentalDays;
+
+                return true;
+            } else {
+                alert("İade tarihi alış tarihinden sonra olmalıdır.");
+                return false; 
+            }
+        }
+
+        document.getElementById("alma-tarihi").onchange = calculateRentalDays;
+        document.getElementById("iade-tarihi").onchange = calculateRentalDays;
+
+</script>
+
+  
+  </script>
+
+</body>
+
+<div id="map"></div>
+<script>
+    function initMap() {
+        var selectedCity = '{{ session.get("city") }}';
+
+        var cities = {
+            'Ankara': { lat: 39.9334, lng: 32.8597 },
+            'İstanbul': { lat: 41.0082, lng: 28.9784 },
+            'İzmir': { lat: 38.4192, lng: 27.1287 },
+            'New York': { lat: 40.7128, lng: -74.0060 },
+            'Los Angeles': { lat: 34.0522, lng: -118.2437 },
+            'Chicago': { lat: 41.8781, lng: -87.6298 },
+            'Roma': { lat: 41.9028, lng: 12.4964 },
+            'Milano': { lat: 45.4642, lng: 9.1900 },
+            'Napoli': { lat: 40.8522, lng: 14.2681 }
+        };
+
+        if (selectedCity in cities) {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: cities[selectedCity],
+                zoom: 8
+            });
+
+            var marker = new google.maps.Marker({
+                map: map,
+                position: cities[selectedCity],
+                title: 'Seçilen Şehir'
+            });
+        }
+    }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/update_map?city=' + selectedCity, true);
+      xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+              var response = JSON.parse(xhr.responseText);
+              updateMapWithCoordinates(response.latitude, response.longitude, selectedCity);
+          }
+      };
+      xhr.send();
+  });
+
+  // Fetch the username from the server
+  fetch('/get_username')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('welcomeUsername').innerText = data.username;
+                } else {
+                    console.error(data.message);
+                }
+            })
+            .catch(error => console.error('Error fetching username:', error));
+
+</script>
+</body>
+</html>
